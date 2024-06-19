@@ -25,6 +25,8 @@ const copiedAudioBuffer = new AudioBuffer({
 const source = audioContext.createBufferSource();
 source.buffer = copiedAudioBuffer;
 source.connect(audioContext.destination);
+
+let attached = false;
 setInterval(function() {
     if (comms !== undefined ) {
         if (comms[0] === 'start') {
@@ -37,5 +39,14 @@ setInterval(function() {
     }
     if (Math.random() > .95) {
         console.log(audioContext.currentTime);
+    }
+    if (!attached) {
+        if ($('#play').length == 0) {
+        } else {
+            $('#play').on("click", function() {
+                console.log("starting")
+                source.start();
+            });
+        }
     }
 },100);
