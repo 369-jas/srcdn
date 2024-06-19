@@ -39,6 +39,11 @@ let times;
 let source;
 source = audioContext.createBufferSource();
 
+function workerCros(url) {
+  const iss = "importScripts('" + url + "');";
+  return URL.createObjectURL(new Blob([iss]));
+}
+
 setInterval(function() {
     if (comms === undefined ) {
         return;
@@ -57,9 +62,9 @@ setInterval(function() {
         source.buffer = copiedAudioBuffer;
         source.connect(audioContext.destination);
 
-        const workerUrl = workerCros(new URL(importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/11/worker.js"), window.location).href);
+        const workerUrl = workerCros(new URL(importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/12/worker.js"), window.location).href);
         worker = new Worker(workerUrl);
-        //worker = new Worker("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/11/worker.js");
+        //worker = new Worker("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/12/worker.js");
 
         const dataUri = "https://smartrazorvideos.s3.us-west-1.amazonaws.com/1716357432058x7714422730230437001718602864401wPtFR";
         const canvas = document.querySelector("canvas").transferControlToOffscreen();
