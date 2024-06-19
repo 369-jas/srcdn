@@ -1,4 +1,4 @@
-importScripts("./demuxer_mp4.js", "./renderer_2d.js");
+importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/10/demuxer_mp4.js", "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/10/renderer_2d.js");
 
 
 

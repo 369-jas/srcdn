@@ -1,3 +1,4 @@
+
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 const response = await fetch("https://smartrazorvideos.s3.us-west-1.amazonaws.com/1716357432058x7714422730230437001718602864401wPtFR");
@@ -32,6 +33,7 @@ function prepareAudioBuffer(times)  {
     return copiedAudioBuffer;
 }
 
+let worker;
 let copiedAudioBuffer;
 let times;
 let source;
@@ -45,10 +47,20 @@ setInterval(function() {
         source.start();
     }
     if ("segments" in comms) {
+        try {
+            source.stop()
+        } catch (e) {}
+
         times = comms.get("segments")
+        source = audioContext.createBufferSource();
         copiedAudioBuffer = prepareAudioBuffer(times);
         source.buffer = copiedAudioBuffer;
         source.connect(audioContext.destination);
+
+        worker = new Worker("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/10/worker.js");
+        const dataUri = "https://smartrazorvideos.s3.us-west-1.amazonaws.com/1716357432058x7714422730230437001718602864401wPtFR";
+        const canvas = document.querySelector("canvas").transferControlToOffscreen();
+        worker.postMessage({ type: "init", data: {dataUri, canvas, segs: times}}, [canvas]);
     }
     /*
     if (Math.random() > .95) {
@@ -56,3 +68,12 @@ setInterval(function() {
     }
     */
 },100);
+
+
+setInterval(function() {
+    if (worker !== undefined) {
+        worker.postMessage({ type: "time", data: {canvas:null, time:audioContext.currentTime }});
+    }
+},1000)
+
+
