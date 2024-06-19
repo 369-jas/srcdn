@@ -29,6 +29,7 @@ setInterval(function() {
     if (comms !== undefined ) {
         if (comms[0] === 'start') {
             source.start();
+            comms[0] = ''
         }
     }
     console.log(audioContext.currentTime);
