@@ -32,7 +32,9 @@ setInterval(function() {
             comms[0] = ''
         }
     }
-    console.log(audioContext.currentTime);
+    if (Math.random() > .95) {
+        console.log(audioContext.currentTime);
+    }
 },100);
 
 export { source };
