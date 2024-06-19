@@ -22,6 +22,18 @@ const copiedAudioBuffer = new AudioBuffer({
     numberOfChannels: buffer.numberOfChannels,
     sampleRate: buffer.sampleRate
 });
+for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const channelData = buffer.getChannelData(channel);
+    const copiedChannelData = copiedAudioBuffer.getChannelData(channel);
+
+    let sample = 0
+    for (let samples_i = 0; samples_i < sampleBounds.length; samples_i++) {
+        for (let src_frame = sampleBounds[samples_i][0]; src_frame < sampleBounds[samples_i][1]; src_frame++) {
+            copiedChannelData[sample] = channelData[src_frame];
+            sample++;
+        }
+    }
+}
 const source = audioContext.createBufferSource();
 source.buffer = copiedAudioBuffer;
 source.connect(audioContext.destination);
