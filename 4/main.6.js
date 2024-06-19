@@ -43,10 +43,12 @@ setInterval(function() {
     if (!attached) {
         if ($('#play').length == 0) {
         } else {
-            $('#play').on("click", function() {
+            $('#play').on("click", function startSource() {
                 console.log("starting")
                 source.start();
+                $('#play').off("click", startSource);
             });
+            attached = true;
         }
     }
 },100);
