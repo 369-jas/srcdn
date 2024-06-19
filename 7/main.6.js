@@ -4,13 +4,6 @@ const response = await fetch("https://smartrazorvideos.s3.us-west-1.amazonaws.co
 const buffer = await audioContext.decodeAudioData(await response.arrayBuffer());
 
 function prepareAudioBuffer(times)  {
-    let times = [
-        [2.042, 2.943], [3.223, 17.956], [44.573, 46.073],
-        [48.794, 54.158], [65.2, 69.349], [88.016, 102.363],
-        [110.026, 116.789], [119.585, 126.748], [130.629, 134.21],
-        [137.091, 145.654], [148.744, 153.348], [156.05, 170.77],
-        [192.792, 209.991], [250.231, 259.505], [297.387, 307.638]
-    ];
     const sampleBounds = [];
     let totalFrames = 0;
     for (let i = 0; i < times.length; i++) {
