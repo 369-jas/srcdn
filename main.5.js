@@ -36,5 +36,3 @@ setInterval(function() {
         console.log(audioContext.currentTime);
     }
 },100);
-
-export { source };
