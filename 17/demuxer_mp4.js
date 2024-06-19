@@ -1,4 +1,4 @@
-importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/14/mp4box.all.min.js");
+importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/17/mp4box.all.min.js");
 // Wraps an MP4Box File as a WritableStream underlying sink.
 class MP4FileSink {
   #setStatus = null;

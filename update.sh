@@ -30,6 +30,8 @@ NEW_FOLDER_NAME=$((FOLDER_NAME + 1))
 mv "$FOLDER_NAME" "$NEW_FOLDER_NAME"
 find . -type f -exec sed -i "s/main\/$FOLDER_NAME/main\/$NEW_FOLDER_NAME/g" {} +
 
+find . -type f -exec sed -i "s/worker\.$FOLDER_NAME/worker.$NEW_FOLDER_NAME/g" {} +
+mv "$NEW_FOLDER_NAME"/worker."$FOLDER_NAME".js "$NEW_FOLDER_NAME"/worker."$NEW_FOLDER_NAME".js
 
 # Output the new folder name
 echo "Folder renamed to: $NEW_FOLDER_NAME"
