@@ -57,7 +57,10 @@ setInterval(function() {
         source.buffer = copiedAudioBuffer;
         source.connect(audioContext.destination);
 
-        worker = new Worker("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/10/worker.js");
+        const workerUrl = workerCros(new URL(importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/11/worker.js"), window.location).href);
+        worker = new Worker(workerUrl);
+        //worker = new Worker("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/11/worker.js");
+
         const dataUri = "https://smartrazorvideos.s3.us-west-1.amazonaws.com/1716357432058x7714422730230437001718602864401wPtFR";
         const canvas = document.querySelector("canvas").transferControlToOffscreen();
         worker.postMessage({ type: "init", data: {dataUri, canvas, segs: times}}, [canvas]);
