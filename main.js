@@ -26,7 +26,12 @@ const source = audioContext.createBufferSource();
 source.buffer = copiedAudioBuffer;
 source.connect(audioContext.destination);
 setInterval(function() {
+    if (comms !== undefined ) {
+        if (comms[0] === 'start') {
+            source.start();
+        }
+    }
     console.log(audioContext.currentTime);
-},1000);
+},100);
 
 export { source };
