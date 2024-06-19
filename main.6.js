@@ -28,8 +28,11 @@ source.connect(audioContext.destination);
 setInterval(function() {
     if (comms !== undefined ) {
         if (comms[0] === 'start') {
-            source.start();
             comms[0] = ''
+            try {
+                source.start();
+            } catch (e) {
+            }
         }
     }
     if (Math.random() > .95) {
