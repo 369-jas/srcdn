@@ -20,8 +20,8 @@ async function createAudioContext() {
     audioWorker.port.postMessage({type:"Segments", data: segments});
 }
 
-let local = true;
-let url = "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/worker.19.js";
+let local = false;
+let url = "https://app.smartrazor.ai/worker.19.js";
 if (local) {
     url = "./worker.19.js"
 }
