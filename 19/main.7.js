@@ -1,25 +1,35 @@
 
 console.log("main starting")
-const AudioContext = window.AudioContext || window.webkitAudioContext;
-const audioContext = new AudioContext();
 
+let audioContext;
+let audioWorker;
+async function createAudioContext() {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioContext = new AudioContext();
+    await audioContext.audioWorklet.addModule('worklet.js');
+    audioWorker = new AudioWorkletNode(audioContext, 'audio-worker');
+    const audioVisChannel = new MessageChannel();
+    worker.postMessage({ type: "AudioVisualChannel", data: audioVisChannel.port1 }, [audioVisChannel.port1]);
+    audioWorker.port.postMessage({ type: "AudioVisualChannel", data: audioVisChannel.port2 }, [audioVisChannel.port2]);
+    audioWorker.port.onmessage = function(e) {
+        if (e.data.type === "Time") {
+            let time = e.data.time;
+            comms.send("trackBarTime", time);
+        }
+    }
+    audioWorker.port.postMessage({type:"Segments", data: segments});
+}
 
-await audioContext.audioWorklet.addModule('worklet.js');
-const audioWorker = new AudioWorkletNode(audioContext, 'audio-worker');
-
-let local = false;
+let local = true;
 let url = "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/worker.19.js";
 if (local) {
     url = "./worker.19.js"
 }
 let worker = new Worker(url);
 
-const audioVisChannel = new MessageChannel();
-worker.postMessage({ type: "AudioVisualChannel", data: audioVisChannel.port1 }, [audioVisChannel.port1]);
-audioWorker.port.postMessage({ type: "AudioVisualChannel", data: audioVisChannel.port2 }, [audioVisChannel.port2]);
-
 
 async function loadVideo(dataUri) {
+    createAudioContext();
     const canvas = document.querySelector("canvas").transferControlToOffscreen();
     worker.postMessage({ type: "init", data: {dataUri, canvas}}, [canvas]);
     worker.postMessage({ type: "startRender", data: {}}, []);
@@ -47,13 +57,13 @@ function getAudioBufferArrays(buffer) {
 //let source;
 let started = false;
 let segments;
+let loaded = false;
 
 setInterval(function() {
     if (comms === undefined ) {
         return;
     } else if (comms.get("start")) {
         started = true;
-        //source.start();
         audioContext.resume();
         audioWorker.port.postMessage({type:"Play"});
         worker.postMessage({type:"Play"});
@@ -61,23 +71,27 @@ setInterval(function() {
         audioWorker.port.postMessage({type:"Pause"});
         worker.postMessage({type:"Pause"});
     } else if ("segments" in comms) {
-        //try {
-        //    source.stop();
-        //} catch (e) {}
         let times = comms.get("segments")
+        segments = times;
         worker.postMessage({ type: "segments", data: {segments: times}});
-        audioWorker.port.postMessage({type:"Segments", data: times});
+        if (audioWorker !== undefined) {
+            audioWorker.port.postMessage({type:"Segments", data: segments});
+        }
     } else if ("seek" in comms) {
         let time = comms.get("seek");
         audioWorker.port.postMessage({type:"Seek", data: time});
     } else if ("dataUri" in comms) {
+        if (loaded) {
+            return
+        }
         loadVideo(comms.get("dataUri"));
+        loaded = true;
     }
 },100);
 
 
 setInterval(function() {
-    if (worker !== undefined && started) {
+    if (worker !== undefined && audioWorker !== undefined && started) {
         let latency = audioContext.outputLatency + audioContext.baseLatency;
         let timing = {
             now: performance.now(),
@@ -89,9 +103,4 @@ setInterval(function() {
     }
 },100)
 
-audioWorker.port.onmessage = function(e) {
-    if (e.data.type === "Time") {
-        let time = e.data.time;
-        comms.send("trackBarTime", time);
-    }
-}
+
