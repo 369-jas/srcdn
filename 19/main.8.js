@@ -62,6 +62,12 @@ let loaded = false;
 setInterval(function() {
     if (comms === undefined ) {
         return;
+    } else if ("dataUri" in comms) {
+        if (loaded) {
+            return
+        }
+        loadVideo(comms.get("dataUri"));
+        loaded = true;
     } else if (comms.get("start")) {
         started = true;
         audioContext.resume();
@@ -80,12 +86,6 @@ setInterval(function() {
     } else if ("seek" in comms) {
         let time = comms.get("seek");
         audioWorker.port.postMessage({type:"Seek", data: time});
-    } else if ("dataUri" in comms) {
-        if (loaded) {
-            return
-        }
-        loadVideo(comms.get("dataUri"));
-        loaded = true;
     }
 },100);
 
