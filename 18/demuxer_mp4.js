@@ -1,4 +1,4 @@
-let local = true;
+let local = false;
 if (local) {
   importScripts("./mp4box.all.min.js");
 } else {
