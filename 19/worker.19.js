@@ -10,16 +10,19 @@ let last_time = 0;
 if('function' === typeof importScripts) {
   console.log("initializing workers");
 
-  let local = false;
+  let local = true;
   if (local) {
     importScripts(
       "./demuxer_mp4.js",
-      "./renderer_2d.js"
+      "./renderer_2d.js",
+      "./downloader.js",
+      "./mp4box.all.min.js"
     );
   } else {
     importScripts(
       "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/demuxer_mp4.js",
-      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/renderer_2d.js"
+      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/renderer_2d.js",
+      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/downloader.js"
     );  
   }
   self.addEventListener("message", message => start(message.data));
@@ -63,13 +66,53 @@ let time_received = performance.now();
 let segments = [];
 
 function handleInit(dataUri, canvas, segs) {
+  Log.log_level = 1;
+
   // Pick a renderer to use.
   started = true;
   renderer = new Canvas2DRenderer(canvas);
 
   // Set up a VideoDecoder.
+  myMp4boxfile = MP4Box.createFile();
+  const downloader = new Downloader();
+  myMp4boxfile.onSamples = function (id, user, samples) {
+    console.log("got samples")
+  }
+  downloader.setCallback(
+		function (response, end, error) { 
+			var nextStart = 0;
+			if (response) {
+				//progressbar.progressbar({ value: Math.ceil(100*downloader.chunkStart/downloader.totalLength) });
+				nextStart = myMp4boxfile.appendBuffer(response, end);
+        console.log(response, end, nextStart);
+        console.log("response")
+      }
+			if (end) {
+				//progressbar.progressbar({ value: 100 });
+				mp4boxfile.flush();
+        console.log("done");
+			} else {
+        console.log("setting next start", nextStart);
+				downloader.setChunkStart(nextStart);
+			}
+			if (error) {
+				//reset();
+				//progresslabel.text("Download error!");
+        console.log("error");
+			}
+		}
+	);
+  downloader.setChunkStart(myMp4boxfile.seek(0, true).offset);
+	downloader.setInterval(500);
+	downloader.setChunkSize(2000000);
+	downloader.setUrl(dataUri);
+	downloader.start();
+  return;
+
+  console.log(downloader);
   const decoder = new VideoDecoder({
     output(frame) {
+      console.log("outputting frame");
       // Update statistics.
       if (startTime == null) {
         startTime = performance.now();
@@ -99,6 +142,7 @@ function handleInit(dataUri, canvas, segs) {
       decoder.configure(config);
     },
     onChunk(chunk) {
+      console.log("got chunk");
       decoder.decode(chunk);
     },
     setStatus
