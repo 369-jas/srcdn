@@ -20,7 +20,7 @@ async function createAudioContext() {
     audioWorker.port.postMessage({type:"Segments", data: segments});
 }
 
-let local = false;
+let local = true;
 let url = "https://app.smartrazor.ai/worker.19.js";
 if (local) {
     url = "./worker.19.js"
@@ -34,13 +34,13 @@ async function loadVideo(dataUri) {
     worker.postMessage({ type: "init", data: {dataUri, canvas}}, [canvas]);
     worker.postMessage({ type: "startRender", data: {}}, []);
 
-    const response = await fetch(dataUri);
-    const buffer = await audioContext.decodeAudioData(await response.arrayBuffer());
+    //const response = await fetch(dataUri);
+    //const buffer = await audioContext.decodeAudioData(await response.arrayBuffer());
 
-    let [buffs, sampleRate] = getAudioBufferArrays(buffer);
-    let arrBuffs = buffs.map(a=>a.buffer).slice(1)
-    audioWorker.port.postMessage({type: "AudioData", data: {buffs, sampleRate}}, arrBuffs);
-    audioWorker.connect(audioContext.destination);
+    //let [buffs, sampleRate] = getAudioBufferArrays(buffer);
+    //let arrBuffs = buffs.map(a=>a.buffer).slice(1)
+    //audioWorker.port.postMessage({type: "AudioData", data: {buffs, sampleRate}}, arrBuffs);
+    //audioWorker.connect(audioContext.destination);
 }
 
 function getAudioBufferArrays(buffer) {

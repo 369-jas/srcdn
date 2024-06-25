@@ -18,6 +18,7 @@ class MP4FileSink {
 
   write(chunk) {
     // MP4Box.js requires buffers to be ArrayBuffers, but we have a Uint8Array.
+    console.log("writing chunk")
     const buffer = new ArrayBuffer(chunk.byteLength);
     new Uint8Array(buffer).set(chunk);
 

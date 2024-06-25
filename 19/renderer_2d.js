@@ -18,7 +18,6 @@ class Canvas2DRenderer {
       "Loading...",
       this.#canvas.width / 2 - text.width / 2, this.#canvas.height / 2
     );
-    console.log("loading");
   }
   draw(frame) {
     //this.#canvas.width = frame.displayWidth;
