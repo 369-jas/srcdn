@@ -24,9 +24,9 @@ async function createAudioContext() {
     }
 }
 
-let url = "https://app.smartrazor.ai/worker.21.js";
+let url = "https://app.smartrazor.ai/worker.22.js";
 if (local) {
-    url = "./worker.21.js"
+    url = "./worker.22.js"
 }
 let worker = new Worker(url);
 
