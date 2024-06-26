@@ -1,10 +1,4 @@
-let local = false;
-if (local) {
-  importScripts("./mp4box.all.min.js");
-} else {
-  importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/mp4box.all.min.js");
-}
-
+importScripts("https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/17/mp4box.all.min.js");
 // Wraps an MP4Box File as a WritableStream underlying sink.
 class MP4FileSink {
   #setStatus = null;
