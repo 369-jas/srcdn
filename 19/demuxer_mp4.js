@@ -53,6 +53,8 @@ class MP4Demuxer {
     this.#file = MP4Box.createFile();
     this.#file.onError = error => setStatus("demux", error);
     this.#file.onReady = this.#onReady.bind(this);
+    this.#file.setSegmentOptions(1, null, { nbSamples: 500 } );
+    this.#file.setSegmentOptions(2, null, { nbSamples: 500 } );
     this.#file.onSamples = this.#onSamples.bind(this);
 
     // Fetch the file and pipe the data through.
