@@ -6,7 +6,7 @@ let audioWorker;
 async function createAudioContext() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
-    await audioContext.audioWorklet.addModule('https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/worklet.js');
+    await audioContext.audioWorklet.addModule('https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/20/worklet.js');
     audioWorker = new AudioWorkletNode(audioContext, 'audio-worker');
     const audioVisChannel = new MessageChannel();
     worker.postMessage({ type: "AudioVisualChannel", data: audioVisChannel.port1 }, [audioVisChannel.port1]);

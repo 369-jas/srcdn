@@ -18,8 +18,8 @@ if('function' === typeof importScripts) {
     );
   } else {
     importScripts(
-      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/demuxer_mp4.js",
-      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/19/renderer_2d.js"
+      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/20/demuxer_mp4.js",
+      "https://cdn.jsdelivr.net/gh/369-jas/srcdn@main/20/renderer_2d.js"
     );  
   }
   self.addEventListener("message", message => start(message.data));
