@@ -22,6 +22,9 @@ async function createAudioContext() {
             comms.send("trackBarTime", time);
         }
     }
+    if (segments !== null) {
+        audioWorker.port.postMessage({type:"Segments", data: segments});
+    }
 }
 
 let url = "https://app.smartrazor.ai/worker.22.js";
@@ -59,7 +62,7 @@ function getAudioBufferArrays(buffer) {
 
 //let source;
 let started = false;
-let segments;
+let segments = null;
 let loaded = false;
 
 setInterval(function() {
