@@ -98,7 +98,13 @@ setInterval(function() {
 
 setInterval(function() {
     if (worker !== undefined && audioWorker !== undefined && started) {
-        let latency = audioContext.outputLatency + audioContext.baseLatency;
+        let latency = audioContext.baseLatency;
+        if (typeof audioContext.outputLatency !== 'undefined') {
+            latency += audioContext.outputLatency;
+        } else {
+            latency += .02;
+        }
+
         let timing = {
             now: performance.now(),
             timeOrigin: performance.timeOrigin,
