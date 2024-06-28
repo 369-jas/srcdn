@@ -12,7 +12,7 @@ class Canvas2DRenderer {
 
     const text = this.#ctx.measureText("Loading..."); // TextMetrics object
     text.width; // 16;
-    this.#ctx.font = "48px serif";
+    this.#ctx.font = "48px inter";
     this.#ctx.fillStyle = "#ffffff";
     this.#ctx.fillText(
       "Loading...",
