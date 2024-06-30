@@ -25,6 +25,7 @@ async function createAudioContext() {
     if (segments !== null) {
         audioWorker.port.postMessage({type:"Segments", data: segments});
     }
+    console.log("created audio context");
 }
 
 let url = "https://app.smartrazor.ai/worker.22.js";
@@ -65,15 +66,20 @@ let started = false;
 let segments = null;
 let loaded = false;
 
-setInterval(function() {
-    if (comms === undefined ) {
+setInterval(async function listencomms() {
+    if (listencomms.running === true) {
+        console.log("blocked")
         return;
+    } else {
+        listencomms.running = true;
+    }
+
+    if (comms === undefined ) {
     } else if ("dataUri" in comms) {
-        if (loaded) {
-            return
+        if (!loaded) {
+            await loadVideo(comms.get("dataUri"));
+            loaded = true;
         }
-        loadVideo(comms.get("dataUri"));
-        loaded = true;
     } else if (comms.get("start")) {
         started = true;
         audioContext.resume();
@@ -93,6 +99,8 @@ setInterval(function() {
         let time = comms.get("seek");
         audioWorker.port.postMessage({type:"Seek", data: time});
     }
+
+    listencomms.running = false;
 },100);
 
 
