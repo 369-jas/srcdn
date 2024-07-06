@@ -36,7 +36,7 @@ let worker = new Worker(url);
 
 
 async function loadVideo(dataUri) {
-    createAudioContext();
+    await createAudioContext();
     const canvas = document.querySelector("canvas").transferControlToOffscreen();
     worker.postMessage({ type: "init", data: {dataUri: dataUri + "STREAM", canvas}}, [canvas]);
     worker.postMessage({ type: "startRender", data: {}}, []);
